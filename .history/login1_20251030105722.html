@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DMI Assessment - Login</title>
+    <link rel="stylesheet" href="dmi_assessment_styles.css">
+</head>
+<body class="login-body">
+
+    <div class="login-container">
+        <div class="login-logo">
+            <img src="uploaded:image_a002bd.png-708369f8-fc2a-4556-a11b-8f6ab05faf54" alt="Company Logo" onerror="this.style.display='none'">
+        </div>
+        
+        <h2 class="login-title">Digital Maturity Index (DMI) Assessment</h2>
+
+        <p class="login-text">
+            As part of **Tasheer’s annual initiative** to measure our digital maturity, we are conducting the Digital Maturity Index (DMI) assessment. Your support is essential to this process. Please review the questionnaire and provide your answers.
+        </p>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            
+            <button type="submit" class="login-button">
+                Log In to Assessment
+            </button>
+            
+            <p id="loginMessage" style="color: red;">Invalid username or password. Please try again.</p>
+        </form>
+    </div>
+
+<script>
+    document.getElementById('loginForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent default form submission
+
+        // --- Configuration: Set your secure credentials here ---
+        const VALID_USERNAME = "procurementteam";
+        const VALID_PASSWORD = "dmi@2025"; 
+        // --------------------------------------------------------
+
+        const usernameInput = document.getElementById('username').value.trim();
+        const passwordInput = document.getElementById('password').value;
+        const messageElement = document.getElementById('loginMessage');
+
+        if (usernameInput === VALID_USERNAME && passwordInput === VALID_PASSWORD) {
+            // Success: Redirect the user to the assessment page
+            window.location.href = "..\09_Procurement\tasheer_Procurment_DMI.html";
+        } else {
+            // Failure: Display error message
+            messageElement.style.display = 'block';
+            setTimeout(() => {
+                messageElement.style.display = 'none';
+            }, 3000);
+        }
+    });
+</script>
+
+</body>
+</html>

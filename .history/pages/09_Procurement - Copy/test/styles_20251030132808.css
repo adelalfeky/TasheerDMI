@@ -1,0 +1,12 @@
+.folder-link .btn {
+  display: inline-block;
+  background: linear-gradient(90deg, #004C97, #007BFF);
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+}
+.folder-link .btn:hover {
+  opacity: 0.9;
+}

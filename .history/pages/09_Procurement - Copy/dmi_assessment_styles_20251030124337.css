@@ -1,0 +1,407 @@
+/* dmi_assessment_styles.css */
+
+/* --- Colors inspired by the corporate theme (Blue, Green, Gold) --- */
+:root {
+    --primary-blue: #004d9c; 
+    --secondary-green: #388e3c; 
+    --accent-gold: #ffc107; 
+    --background-light: #f9f9f9;
+    --container-bg: #ffffff;
+    --q-border: #e0e0e0;
+}
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: var(--background-light);
+    color: #333;
+}
+.container {
+    max-width: 1200px; 
+    margin: auto;
+    background-color: var(--container-bg);
+    padding: 30px 40px;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* --- Assessment Layout and Live Score CSS --- */
+.assessment-layout {
+    display: flex;
+    gap: 30px; 
+    position: relative; 
+}
+.assessment-form-wrapper {
+    flex-grow: 1; 
+    max-width: 800px; 
+}
+.live-score-sidebar {
+    position: sticky; /* Keeps it visible while scrolling */
+    top: 30px; 
+    width: 280px;
+    flex-shrink: 0; 
+    padding-top: 50px; 
+}
+.live-score-card {
+    background-color: var();
+    color: rgb(76, 5, 209);
+    padding: 20px 10px; 
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+.live-score-card h4 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1.1em;
+    font-weight: 400;
+}
+.live-score-chart-container {
+    width: 100%;
+    max-width: 200px; 
+    height: 200px; 
+    margin: 15px auto 10px auto; 
+    position: relative;
+}
+.live-score-card .score-percentage-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.8em;
+    font-weight: 700;
+    color: var(--accent-gold); 
+    line-height: 1;
+    z-index: 10; /* Ensure text is above the chart */
+}
+.live-score-card .score-status {
+    font-size: 0.9em;
+    opacity: 0.8;
+    margin-top: 5px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+/* --- END Assessment Layout and Live Score CSS --- */
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 20px;
+    border-bottom: 3px solid var(--primary-blue);
+    margin-bottom: 30px;
+}
+.header h1 {
+    color: var(--primary-blue);
+    margin: 0;
+    font-size: 1.8em;
+    font-weight: 600;
+}
+.logo-container img {
+    max-height: 50px; 
+    width: auto;
+}
+
+/* --- Login Page Specific Styles --- */
+.login-body {
+    background-color: var(--background-light);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 0;
+}
+.login-container {
+    max-width: 450px;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    background-color: var(--container-bg);
+    text-align: center;
+}
+.login-logo {
+    margin-bottom: 30px;
+}
+.login-logo img {
+    max-height: 80px;
+}
+.login-title {
+    color: var(--primary-blue);
+    margin-bottom: 10px;
+    font-size: 1.5em;
+}
+.login-text {
+    font-size: 1em;
+    color: #555;
+    margin-bottom: 30px;
+    line-height: 1.5;
+    text-align: left;
+    border-left: 3px solid var(--accent-gold);
+    padding-left: 15px;
+    padding-bottom: 5px;
+}
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: var(--primary-blue);
+}
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 1em;
+}
+.login-button {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--secondary-green);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.login-button:hover {
+    background-color: #2e7d32;
+}
+#loginMessage {
+    color: #d32f2f;
+    margin-top: 15px;
+    font-weight: bold;
+    display: none;
+}
+/* --- END Login Page Specific Styles --- */
+
+/* --- Form Styling --- */
+.question-block {
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 1px solid var(--q-border);
+    border-left: 5px solid var(--secondary-green);
+    border-radius: 6px;
+    background-color: #f7fcf7;
+}
+.question-block h3 {
+    margin-top: 0;
+    color: var(--primary-blue);
+    font-size: 1.1em;
+}
+.question-block p {
+    font-size: 0.9em;
+    color: #666;
+    margin-bottom: 10px;
+}
+.level-select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    background-color: #fff;
+    font-size: 1em;
+    cursor: pointer;
+}
+.submit-button {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    margin-top: 30px;
+    background-color: var(--primary-blue);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.submit-button:hover {
+    background-color: #0060b2;
+}
+.save-status {
+    text-align: center;
+    padding: 10px;
+    margin-bottom: 20px;
+    background-color: #e8f5e9;
+    color: var(--secondary-green);
+    border: 1px solid #c8e6c9;
+    border-radius: 4px;
+    display: none; 
+    font-weight: bold;
+}
+
+/* --- Report Section Styling --- */
+#reportSection {
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 1px solid var(--q-border);
+    display: none;
+    width: 100%;
+    box-sizing: border-box;
+}
+.report-header {
+    background-color: var(--primary-blue);
+    color: white;
+    padding: 15px;
+    border-radius: 6px 6px 0 0;
+    margin-bottom: 20px;
+    font-size: 1.5em;
+    text-align: center;
+}
+.report-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+.report-summary h3 {
+    color: var(--primary-blue);
+    margin-bottom: 10px;
+}
+.score-display {
+    font-size: 3.5em;
+    color: var(--secondary-green);
+    font-weight: 700;
+    line-height: 1;
+}
+.score-metadata {
+    color: #666;
+    font-size: 1.1em;
+    margin-bottom: 15px;
+}
+#maturityLevelText {
+    padding: 15px;
+    border-left: 5px solid var(--accent-gold);
+    background-color: #fffde7;
+    border-radius: 4px;
+}
+#maturityLevelText strong {
+    color: var(--primary-blue);
+    font-size: 1.2em;
+    display: block;
+    margin-bottom: 5px;
+}
+.chart-wrapper {
+    position: relative;
+    height: 150px; 
+    width: 100%;
+    display: flex; 
+    align-items: center;
+}
+
+/* --- Detailed Score Table --- */
+.score-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+.score-table th, .score-table td {
+    border: 1px solid #ddd;
+    padding: 12px 15px;
+    text-align: left;
+    vertical-align: top;
+}
+.score-table th {
+    background-color: var(--primary-blue);
+    color: white;
+    font-weight: 600;
+    white-space: nowrap;
+}
+.score-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+.score-table .score-value {
+    font-weight: bold;
+    color: var(--secondary-green);
+    text-align: center;
+    width: 60px;
+}
+.score-table .area-cell {
+    font-weight: bold;
+    background-color: #e3f2fd; 
+}
+.score-table .full-question {
+    font-weight: 500;
+    color: #444;
+}
+
+/* --- Print Button Styling --- */
+.print-button {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    margin-top: 30px;
+    background-color: var(--secondary-green);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.print-button:hover {
+    background-color: #2e7d32;
+}
+
+/* --- Print Styles for PDF Generation --- */
+@media print {
+    body { background-color: #fff; }
+    .container { box-shadow: none; padding: 0; }
+    /* Hide non-report elements */
+    .submit-button, .print-button, #saveStatus, .question-block, h2, form, .live-score-sidebar {
+        display: none;
+    }
+    #reportSection {
+        display: block !important;
+        border-top: none;
+        padding-top: 0;
+    }
+    .header {
+        border-bottom: 2px solid #000;
+        margin-bottom: 20px;
+    }
+    .report-grid {
+        grid-template-columns: 1fr; 
+    }
+    .score-table th, .score-table .area-cell {
+        -webkit-print-color-adjust: exact;
+        color-adjust: exact;
+    }
+}
+
+@media (max-width: 1100px) {
+    /* Stack the form and the score sidebar on smaller screens */
+    .assessment-layout {
+        flex-direction: column;
+        gap: 0;
+    }
+    /* Place the score card at the top, full width */
+    .live-score-sidebar {
+        position: dynamic;
+        width: 100%;
+        padding-top: 0;
+        margin-bottom: 20px;
+        order: -1; /* Puts it above the form */
+    }
+    .live-score-card {
+        padding: 15px;
+    }
+    .live-score-card .score-percentage-center {
+        font-size: 2.5em;
+    }
+    .report-grid {
+        grid-template-columns: 1fr;
+    }
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}

@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Procurement DMI Assessment</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    
+    <script src="dmi_assessment_data.js"></script>
+
+    <style>
+        /* --- Colors inspired by the corporate theme (Blue, Green, Gold) --- */
+        :root {
+            --primary-blue: #004d9c; 
+            --secondary-green: #388e3c; 
+            --accent-gold: #ffc107; 
+            --background-light: #f9f9f9;
+            --container-bg: #ffffff;
+            --q-border: #e0e0e0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--background-light);
+            color: #333;
+        }
+        .container {
+            max-width: 1200px; 
+            margin: auto;
+            background-color: var(--container-bg);
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 20px;
+            border-bottom: 3px solid var(--primary-blue);
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: var(--primary-blue);
+            margin: 0;
+            font-size: 1.8em;
+            font-weight: 600;
+        }
+        .logo-container img {
+            max-height: 50px; 
+            width: auto;
+        }
+        
+        /* --- Form Styling --- */
+        .question-block {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid var(--q-border);
+            border-left: 5px solid var(--secondary-green);
+            border-radius: 6px;
+            background-color: #f7fcf7;
+        }
+        .question-block h3 {
+            margin-top: 0;
+            color: var(--primary-blue);
+            font-size: 1.1em;
+        }
+        .question-block p {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        .level-select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            background-color: #fff;
+            font-size: 1em;
+            cursor: pointer;
+        }
+        .submit-button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin-top: 30px;
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .submit-button:hover {
+            background-color: #0060b2;
+        }
+        .save-status {
+            text-align: center;
+            padding: 10px;
+            margin-bottom: 20px;
+            background-color: #e8f5e9;
+            color: var(--secondary-green);
+            border: 1px solid #c8e6c9;
+            border-radius: 4px;
+            display: none; 
+            font-weight: bold;
+        }
+
+        /* --- Report Section Styling --- */
+        #reportSection {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid var(--q-border);
+            display: none;
+        }
+        .report-header {
+            background-color: var(--primary-blue);
+            color: white;
+            padding: 15px;
+            border-radius: 6px 6px 0 0;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            text-align: center;
+        }
+        .report-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        .report-summary h3 {
+            color: var(--primary-blue);
+            margin-bottom: 10px;
+        }
+        .score-display {
+            font-size: 3.5em;
+            color: var(--secondary-green);
+            font-weight: 700;
+            line-height: 1;
+        }
+        .score-metadata {
+            color: #666;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+        #maturityLevelText {
+            padding: 15px;
+            border-left: 5px solid var(--accent-gold);
+            background-color: #fffde7;
+            border-radius: 4px;
+        }
+        #maturityLevelText strong {
+            color: var(--primary-blue);
+            font-size: 1.2em;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .chart-wrapper {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+        .chart-center-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            font-size: 2em;
+            font-weight: bold;
+            color: var(--primary-blue);
+            pointer-events: none; /* Allows click events to pass through to the chart */
+        }
+
+        /* --- Detailed Score Table --- */
+        .score-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .score-table th, .score-table td {
+            border: 1px solid #ddd;
+            padding: 12px 15px;
+            text-align: left;
+            vertical-align: top;
+        }
+        .score-table th {
+            background-color: var(--primary-blue);
+            color: white;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .score-table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .score-table .score-value {
+            font-weight: bold;
+            color: var(--secondary-green);
+            text-align: center;
+            width: 60px;
+        }
+        .score-table .area-cell {
+            font-weight: bold;
+            background-color: #e3f2fd; 
+        }
+        .score-table .full-question {
+            font-weight: 500;
+            color: #444;
+        }
+
+        /* --- Print Button Styling --- */
+        .print-button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin-top: 30px;
+            background-color: var(--secondary-green);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .print-button:hover {
+            background-color: #2e7d32;
+        }
+
+        /* --- Print Styles for PDF Generation --- */
+        @media print {
+            body { background-color: #fff; }
+            .container { box-shadow: none; padding: 0; }
+            /* Hide non-report elements */
+            .submit-button, .print-button, #saveStatus, .question-block, h2, form {
+                display: none;
+            }
+            #reportSection {
+                display: block !important;
+                border-top: none;
+                padding-top: 0;
+            }
+            .header {
+                border-bottom: 2px solid #000;
+                margin-bottom: 20px;
+            }
+            .report-grid {
+                grid-template-columns: 1fr; 
+            }
+            .score-table th, .score-table .area-cell {
+                -webkit-print-color-adjust: exact;
+                color-adjust: exact;
+            }
+        }
+        
+        @media (max-width: 900px) {
+            .report-grid {
+                grid-template-columns: 1fr;
+            }
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>Procurement Digital Maturity Assessment (DMI)</h1>
+        <div class="logo-container">
+            <img src="uploaded:image_a002bd.png-708369f8-fc2a-4556-a11b-8f6ab05faf54" alt="Company Logo" onerror="this.style.display='none'">
+        </div>
+    </div>
+    
+    <div id="saveStatus" class="save-status">
+        ✅ Progress Saved Automatically!
+    </div>
+
+    <form id="assessmentForm">
+        <h2>Please complete all 14 questions below:</h2>
+        </form>
+
+    <button type="button" class="submit-button" onclick="finalizeAssessment()">
+        Finalize Assessment & Generate Detailed Report
+    </button>
+    
+    <div id="reportSection">
+        <div class="report-header">
+            Procurement DMI Final Assessment Report
+        </div>
+        
+        <div class="report-grid">
+            
+            <div class="report-summary">
+                <h3>Overall Digital Maturity Score</h3>
+                <div class="score-display" id="maturityScoreDisplay">0.00%</div>
+                <div class="score-metadata">Based on an overall score of <span id="totalScoreText">0</span> out of <span id="maxScoreText">0</span> possible points.</div>
+                
+                <h3 style="margin-top: 20px;">Maturity Level Classification</h3>
+                <div id="maturityLevelText"></div>
+            </div>
+            
+            <div class="chart-wrapper">
+                <canvas id="maturityChart"></canvas>
+                <div class="chart-center-text" id="chartCenterText"></div>
+            </div>
+        </div>
+
+        <button type="button" class="print-button" onclick="window.print()">
+            🖨️ Print Report / Save as PDF
+        </button>
+
+        <h3>Detailed Question Score Breakdown</h3>
+        <table class="score-table">
+            <thead>
+                <tr>
+                    <th style="width: 50px;">Q-No.</th>
+                    <th style="width: 250px;">Area</th>
+                    <th>Question</th>
+                    <th style="width: 60px; text-align: center;">Score</th>
+                    <th style="width: 300px;">Selected Answer</th>
+                </tr>
+            </thead>
+            <tbody id="detailedScoreBody">
+                </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    // --- Helper Functions to build the form and logic from dmi_assessment_data.js ---
+
+    /**
+     * Builds the HTML form structure based on the DMI_QUESTIONS array.
+     */
+    function buildForm() {
+        const form = document.getElementById('assessmentForm');
+        let html = '';
+
+        DMI_QUESTIONS.forEach(q => {
+            let optionsHtml = q.choices.map(c => 
+                `<option value="${c.value}">${c.text}</option>`
+            ).join('');
+
+            html += `
+                <div class="question-block" data-q-id="${q.id}">
+                    <h3>${q.id}. ${q.title}</h3>
+                    <p id="${q.id}_text">${q.text}</p>
+                    <select id="${q.id}_select" name="${q.id}" class="level-select" onchange="saveSelection(this)">
+                        <option value="">-- Select a Maturity Level (1-5) --</option>
+                        ${optionsHtml}
+                    </select>
+                </div>
+            `;
+        });
+        form.innerHTML += html;
+    }
+
+    /**
+     * Saves the current form selection to Local Storage.
+     */
+    function saveSelection(selectElement) {
+        let selections = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+        const questionId = selectElement.name;
+        const selectedValue = selectElement.value;
+
+        if (selectedValue) {
+            selections[questionId] = selectedValue;
+        } else {
+            delete selections[questionId];
+        }
+
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(selections));
+        
+        const saveStatus = document.getElementById('saveStatus');
+        saveStatus.style.display = 'block';
+        setTimeout(() => {
+            saveStatus.style.display = 'none';
+        }, 1500);
+    }
+
+    /**
+     * Loads saved selections from Local Storage.
+     */
+    function loadSelections() {
+        // Ensure questions are built before trying to load selections
+        if (typeof DMI_QUESTIONS === 'undefined') {
+            alert("Error: Missing 'dmi_assessment_data.js' file. Please ensure it is in the same folder.");
+            return;
+        }
+        buildForm();
+        
+        const savedData = localStorage.getItem(STORAGE_KEY);
+        if (savedData) {
+            const selections = JSON.parse(savedData);
+            
+            const questionElements = document.querySelectorAll('.level-select');
+            questionElements.forEach(selectElement => {
+                const questionId = selectElement.name;
+                if (selections[questionId]) {
+                    selectElement.value = selections[questionId];
+                }
+            });
+        }
+    }
+
+    /**
+     * Calculates the score and generates the report elements.
+     */
+    function finalizeAssessment() {
+        const questionElements = document.querySelectorAll('.question-block');
+        let totalScore = 0;
+        let answeredQuestions = 0;
+        const detailedScoreBody = document.getElementById('detailedScoreBody');
+        detailedScoreBody.innerHTML = ''; 
+        let currentArea = null;
+
+        DMI_QUESTIONS.forEach(qData => {
+            const block = document.querySelector(`[data-q-id="${qData.id}"]`);
+            const select = block ? block.querySelector('.level-select') : null;
+            const score = select ? parseInt(select.value) : NaN;
+
+            // Logic to prevent repeating Area names
+            if (qData.area !== currentArea) {
+                currentArea = qData.area;
+                const areaRow = detailedScoreBody.insertRow();
+                areaRow.classList.add('area-row');
+                const areaCell = areaRow.insertCell();
+                areaCell.colSpan = 5;
+                areaCell.textContent = currentArea;
+                areaCell.classList.add('area-cell');
+            }
+
+            const row = detailedScoreBody.insertRow();
+            
+            row.insertCell().textContent = qData.id;
+            row.insertCell().textContent = ''; // Area cell remains empty
+            
+            const questionCell = row.insertCell();
+            questionCell.textContent = qData.text;
+            questionCell.classList.add('full-question');
+
+            if (!isNaN(score) && select.value !== "") {
+                totalScore += score;
+                answeredQuestions++;
+                
+                const scoreCell = row.insertCell();
+                scoreCell.textContent = score;
+                scoreCell.classList.add('score-value');
+
+                const answerCell = row.insertCell();
+                answerCell.textContent = select.options[select.selectedIndex].text;
+            } else {
+                row.insertCell().textContent = 'N/A';
+                row.insertCell().textContent = 'Question Not Answered';
+            }
+        });
+
+        if (answeredQuestions !== TOTAL_QUESTIONS) {
+            alert(`Please answer all ${TOTAL_QUESTIONS} questions before generating the final report. You have answered ${answeredQuestions} questions.`);
+            return;
+        }
+
+        // Calculate Maturity Percentage
+        const maturityPercentage = (totalScore / MAX_POSSIBLE_SCORE) * 100;
+        const percentageText = maturityPercentage.toFixed(2) + "%";
+        
+        // Find Maturity Level Text
+        const level = maturityBands.find(band => maturityPercentage >= band.range[0] && maturityPercentage <= band.range[1]);
+        const levelName = level ? level.name : 'Unclassified';
+        const levelDescription = level ? level.description : 'Please review the score range definitions.';
+
+        // Display results
+        document.getElementById('maturityScoreDisplay').textContent = percentageText;
+        document.getElementById('totalScoreText').textContent = totalScore;
+        document.getElementById('maxScoreText').textContent = MAX_POSSIBLE_SCORE;
+        document.getElementById('chartCenterText').textContent = percentageText;
+
+        const levelTextElement = document.getElementById('maturityLevelText');
+        levelTextElement.innerHTML = `
+            <strong>${levelName}</strong>
+            <p>${levelDescription}</p>
+        `;
+        
+        document.getElementById('reportSection').style.display = 'block';
+        
+        // Scroll to the report
+        document.getElementById('reportSection').scrollIntoView({ behavior: 'smooth' });
+
+        // Generate the Doughnut Chart
+        generateDoughnutChart(maturityPercentage.toFixed(2));
+    }
+    
+    /**
+     * Generates a Doughnut Chart using Chart.js
+     */
+    function generateDoughnutChart(maturityPercentage) {
+        if (chartInstance) {
+            chartInstance.destroy();
+        }
+
+        const remainingPotential = (100 - maturityPercentage).toFixed(2);
+        
+        const data = {
+            labels: [`Achieved Maturity (${maturityPercentage}%)`, `Remaining Potential (${remainingPotential}%)`],
+            datasets: [{
+                data: [maturityPercentage, remainingPotential],
+                backgroundColor: ['var(--secondary-green)', '#e0e0e0'], 
+                hoverBackgroundColor: ['#2e7d32', '#bdbdbd'],
+                borderWidth: 0,
+            }]
+        };
+
+        const config = {
+            type: 'doughnut',
+            data: data,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '80%', 
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return tooltipItem.label + ': ' + tooltipItem.raw + '%';
+                            }
+                        }
+                    }
+                },
+            }
+        };
+
+        const ctx = document.getElementById('maturityChart').getContext('2d');
+        chartInstance = new Chart(ctx, config);
+    }
+
+    // Run the load function when the page is finished loading
+    window.onload = loadSelections;
+</script>
+
+</body>
+</html>

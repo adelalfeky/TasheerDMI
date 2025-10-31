@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Tasheer Digital Platform — Sign in</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container" role="main">
+    <div class="left">
+      <img src="images/company-logo.png" alt="Tasheer logo" class="logo">
+      <h1>Welcome to Tasheer DMI </h1>
+   
+      <p class="intro">
+        As part of <strong>Tasheer’s annual initiative</strong> to measure our digital maturity,
+        we are conducting the Digital Maturity Index (DMI) assessment. Your support is essential
+        to this process. Please review the questionnaire and provide your answers.
+      </p>
+      <form id="loginForm" class="form" onsubmit="return false;">
+        <input id="username" class="input" placeholder="Phone or Email address" autocomplete="username">
+        <input id="password" type="password" class="input" placeholder="Password" autocomplete="current-password">
+        <button id="loginBtn" class="btn">Log In</button>
+        <a class="forgot" href="#">Forgot password?</a>
+        <div id="msg" class="msg" role="alert"></div>
+      </form>
+      <p class="footer">Contact: <a href="mailto:afeky@tasheer.com">afeky@tasheer.com</a></p>
+    </div>
+    <div class="right">
+      <img class="illustration" src="images/illustration.png" alt="Digital transformation illustration">
+    </div>
+  </div>
+<script src="login_data.js"></script>
+<script>
+const loginBtn = document.getElementById('loginBtn');
+const msg = document.getElementById('msg');
+loginBtn.addEventListener('click', () => {
+  const u = document.getElementById('username').value.trim();
+  const p = document.getElementById('password').value;
+  if(!u || !p){ showMsg('Please enter username and password'); return; }
+  const found = findUser(u);
+  if(!found){ showMsg('User not found'); return; }
+  if(found.password !== p){ showMsg('Incorrect password'); return; }
+  showMsg('Login successful — redirecting...', true);
+  setTimeout(()=> { window.location.href = found.route; }, 1000);
+});
+function showMsg(t, success=false){
+  msg.style.display = 'block';
+  msg.className = 'msg' + (success? ' success': '');
+  msg.textContent = t;
+}
+</script>
+</body>
+</html>

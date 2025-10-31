@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Procurement DMI Assessment</title>
+    <link rel="stylesheet" href="dmi_assessment_styles.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+    
+    <script src="dmi_assessment_data.js"></script>
+    <script src="dmi_assessment_logic.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>Procurement Digital Maturity Assessment (DMI)</h1>
+        <div class="logo-container">
+            <img src="uploaded:image_a002bd.png-708369f8-fc2a-4556-a11b-8f6ab05faf54" alt="Company Logo" onerror="this.style.display='none'">
+        </div>
+    </div>
+    
+    <div id="saveStatus" class="save-status">
+        ✅ Progress Saved Automatically!
+    </div>
+
+    <div class="assessment-layout">
+        
+        <div class="live-score-sidebar">
+            <div class="live-score-card">
+                <h4>Live DMI Score (Total Maturity)</h4>
+                
+                <div class="live-score-chart-container">
+                    <canvas id="liveMaturityChart"></canvas>
+                    <span class="score-percentage-center" id="liveScorePercentage">0%</span>
+                </div>
+                
+                <div class="score-status" id="liveScoreStatus">0 / 14 Questions Answered</div>
+            </div>
+        </div>
+
+        <div class="assessment-form-wrapper">
+            <form id="assessmentForm">
+                <h2>Please complete all 14 questions below:</h2>
+                </form>
+
+            <button type="button" class="submit-button" onclick="finalizeAssessment()">
+                Finalize Assessment & Generate Detailed Report
+            </button>
+        </div>
+    </div> <div id="reportSection">
+        <div class="report-header">
+            Procurement DMI Final Assessment Report
+        </div>
+        
+        <div class="report-grid">
+            
+            <div class="report-summary">
+                <h3>Overall Digital Maturity Score</h3>
+                <div class="score-display" id="maturityScoreDisplay">0.00%</div>
+                <div class="score-metadata">Based on an overall score of <span id="totalScoreText">0</span> out of <span id="maxScoreText">0</span> possible points.</div>
+                
+                <h3 style="margin-top: 20px;">Maturity Level Classification</h3>
+                <div id="maturityLevelText"></div>
+            </div>
+            
+            <div class="chart-wrapper">
+                <canvas id="finalMaturityChart"></canvas>
+            </div>
+        </div>
+
+        <button type="button" class="print-button" onclick="window.print()">
+            🖨️ Print Report / Save as PDF
+        </button>
+
+        <h3>Detailed Question Score Breakdown</h3>
+        <table class="score-table">
+            <thead>
+                <tr>
+                    <th style="width: 50px;">Q-No.</th>
+                    <th>Question</th>
+                    <th style="width: 60px; text-align: center;">Score</th>
+                    <th style="width: 300px;">Selected Answer</th>
+                </tr>
+            </thead>
+            <tbody id="detailedScoreBody">
+                </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    // This file only serves as the entry point, calling the function defined in dmi_assessment_logic.js
+    // window.onload = loadSelections; // This is now done within the dmi_assessment_logic.js file for simplicity
+</script>
+
+</body>
+</html>

@@ -1,0 +1,399 @@
+/* dmi_assessment_styles.css */
+
+/* --- Custom Variables (Theme) --- */
+:root {
+    --primary-blue: #004d99; /* Dark Blue */
+    --secondary-green: #388e3c; /* Dark Green */
+    --accent-gold: #ffc107; /* Gold/Yellow for highlight */
+    --background-light: #f4f7f6;
+    --card-background: #ffffff;
+    --text-dark: #333333;
+    --border-color: #e0e0e0;
+    --shadow-color: rgba(0, 0, 0, 0.05);
+}
+
+/* --- Base Styling --- */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--background-light);
+    color: var(--text-dark);
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* --- Header & Title --- */
+.header {
+    background-color: var(--card-background);
+    padding: 20px 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px var(--shadow-color);
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header h1 {
+    color: var(--primary-blue);
+    margin: 0;
+    font-size: 2.2em;
+}
+
+.department-selector-container select {
+    padding: 10px 15px;
+    font-size: 1em;
+    border: 2px solid var(--primary-blue);
+    border-radius: 6px;
+    background-color: var(--card-background);
+    cursor: pointer;
+    transition: border-color 0.3s;
+}
+
+.department-selector-container select:hover {
+    border-color: var(--secondary-green);
+}
+
+.logo-container {
+    height: 60px;
+}
+
+.logo-container img {
+    height: 100%;
+    width: auto;
+    object-fit: contain;
+}
+
+/* --- Assessment Layout (Flexbox) --- */
+.assessment-layout {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.assessment-form-wrapper {
+    flex: 3; /* Takes up most of the space */
+    min-width: 60%;
+}
+
+.live-score-sidebar {
+    flex: 1; /* Sidebar takes up less space */
+    position: sticky;
+    top: 20px;
+}
+
+/* --- Live Score Card --- */
+.live-score-card {
+    background-color: var(--card-background);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px var(--shadow-color);
+    text-align: center;
+}
+
+.live-score-card h4 {
+    color: var(--primary-blue);
+    margin-top: 0;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
+}
+
+.live-score-chart-container {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    margin: 20px auto;
+}
+
+.score-percentage-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2.5em;
+    font-weight: bold;
+    color: var(--text-dark);
+}
+
+.score-status {
+    font-size: 0.9em;
+    color: #666;
+}
+
+/* --- Form and Question Blocks --- */
+#assessmentForm h2 {
+    color: var(--secondary-green);
+    border-bottom: 2px solid var(--secondary-green);
+    padding-bottom: 5px;
+    margin-top: 30px;
+}
+
+.area-header {
+    background-color: var(--primary-blue);
+    color: white;
+    padding: 10px 20px;
+    margin: 20px 0 10px 0;
+    border-radius: 5px;
+    font-size: 1.2em;
+}
+
+.question-block {
+    background-color: var(--card-background);
+    padding: 20px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    border-left: 5px solid var(--primary-blue);
+    box-shadow: 0 2px 4px var(--shadow-color);
+}
+
+.question-block h3 {
+    margin-top: 0;
+    color: var(--primary-blue);
+    font-size: 1.1em;
+}
+
+.question-block p {
+    font-size: 0.95em;
+    margin-bottom: 15px;
+    font-style: italic;
+    color: #666;
+}
+
+.level-select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+    background-color: var(--background-light);
+    font-size: 1em;
+    cursor: pointer;
+}
+
+.level-select:focus {
+    outline: none;
+    border-color: var(--secondary-green);
+    box-shadow: 0 0 0 3px rgba(56, 142, 60, 0.2);
+}
+
+/* --- Buttons --- */
+.submit-button {
+    width: 100%;
+    padding: 15px;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: white;
+    background-color: var(--secondary-green);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    margin-top: 20px;
+}
+
+.submit-button:hover {
+    background-color: #2e7d32;
+    box-shadow: 0 4px 8px var(--shadow-color);
+}
+
+.print-button {
+    width: 100%;
+    padding: 15px;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: var(--primary-blue);
+    background-color: #e3f2fd;
+    border: 1px solid var(--primary-blue);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 20px;
+}
+
+.print-button:hover {
+    background-color: #bbdefb;
+}
+
+/* --- Save Status Alert --- */
+.save-status {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #e8f5e9; /* Light green */
+    color: var(--secondary-green);
+    padding: 10px 20px;
+    border-radius: 6px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    font-weight: bold;
+    display: none; /* Hidden by default */
+    z-index: 1000;
+}
+
+/* --- Report Section --- */
+#reportSection {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 3px dashed var(--primary-blue);
+}
+
+.report-header {
+    background-color: var(--primary-blue);
+    color: white;
+    padding: 15px;
+    font-size: 1.5em;
+    text-align: center;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.report-grid {
+    display: flex;
+    gap: 30px;
+    background-color: var(--card-background);
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px var(--shadow-color);
+}
+
+.report-summary {
+    flex: 1;
+}
+
+.report-summary h3 {
+    color: var(--primary-blue);
+    margin-top: 0;
+}
+
+.score-display {
+    font-size: 3em;
+    font-weight: bold;
+    color: var(--secondary-green);
+    margin-bottom: 10px;
+}
+
+.score-metadata {
+    font-size: 0.9em;
+    color: #999;
+}
+
+.chart-wrapper {
+    flex: 2;
+    max-width: 500px;
+    height: 250px;
+}
+
+#maturityLevelText strong {
+    font-size: 1.5em;
+    color: var(--accent-gold);
+    display: block;
+    margin-bottom: 5px;
+}
+
+#maturityLevelText p {
+    font-style: normal;
+    font-size: 1em;
+    color: #666;
+}
+
+/* --- Detailed Score Table --- */
+.score-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: var(--card-background);
+    box-shadow: 0 2px 8px var(--shadow-color);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.score-table th, .score-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.score-table th {
+    background-color: var(--primary-blue);
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.85em;
+}
+
+.score-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.area-row .area-cell {
+    background-color: #e0f2f1; /* Light cyan */
+    color: var(--primary-blue);
+    font-weight: bold;
+    font-size: 1.1em;
+    text-transform: capitalize;
+}
+
+.full-question {
+    font-style: italic;
+    color: #555;
+}
+
+.score-value {
+    text-align: center;
+    font-weight: bold;
+    color: var(--secondary-green);
+}
+
+/* --- Print Styles --- */
+@media print {
+    body {
+        background-color: white;
+    }
+    .header, .live-score-sidebar, .submit-button, .print-button, .save-status, .department-selector-container {
+        display: none;
+    }
+    .container {
+        max-width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+    .assessment-layout {
+        display: block;
+    }
+    .assessment-form-wrapper {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+    .question-block {
+        border-left: 5px solid #ccc;
+        box-shadow: none;
+        page-break-inside: avoid;
+    }
+    .report-grid {
+        box-shadow: none;
+        border: 1px solid #ccc;
+        padding: 15px;
+        page-break-inside: avoid;
+    }
+    .score-table {
+        box-shadow: none;
+        border: 1px solid #ccc;
+    }
+    .area-header {
+        background-color: #eee !important;
+        -webkit-print-color-adjust: exact; 
+        color: var(--primary-blue) !important;
+        border: 1px solid var(--primary-blue);
+    }
+    .report-header {
+        -webkit-print-color-adjust: exact;
+        background-color: var(--primary-blue) !important;
+        color: white !important;
+        border: none;
+    }
+}

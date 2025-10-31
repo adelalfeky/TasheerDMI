@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Procurement DMI Assessment</title>
+    <link rel="stylesheet" href="dmi_assessment_styles.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+    
+    <script src="dmi_assessment_data.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>Procurement Digital Maturity Assessment (DMI)</h1>
+        <div class="logo-container">
+            <img src="uploaded:image_a002bd.png-708369f8-fc2a-4556-a11b-8f6ab05faf54" alt="Company Logo" onerror="this.style.display='none'">
+        </div>
+    </div>
+    
+    <div id="saveStatus" class="save-status">
+        ✅ Progress Saved Automatically!
+    </div>
+
+    <form id="assessmentForm">
+        <h2>Please complete all 14 questions below:</h2>
+        </form>
+
+    <button type="button" class="submit-button" onclick="finalizeAssessment()">
+        Finalize Assessment & Generate Detailed Report
+    </button>
+    
+    <div id="reportSection">
+        <div class="report-header">
+            Procurement DMI Final Assessment Report
+        </div>
+        
+        <div class="report-grid">
+            
+            <div class="report-summary">
+                <h3>Overall Digital Maturity Score</h3>
+                <div class="score-display" id="maturityScoreDisplay">0.00%</div>
+                <div class="score-metadata">Based on an overall score of <span id="totalScoreText">0</span> out of <span id="maxScoreText">0</span> possible points.</div>
+                
+                <h3 style="margin-top: 20px;">Maturity Level Classification</h3>
+                <div id="maturityLevelText"></div>
+            </div>
+            
+            <div class="chart-wrapper">
+                <canvas id="maturityChart"></canvas>
+            </div>
+        </div>
+
+        <button type="button" class="print-button" onclick="window.print()">
+            🖨️ Print Report / Save as PDF
+        </button>
+
+        <h3>Detailed Question Score Breakdown</h3>
+        <table class="score-table">
+            <thead>
+                <tr>
+                    <th style="width: 50px;">Q-No.</th>
+                    <th>Question</th>
+                    <th style="width: 60px; text-align: center;">Score</th>
+                    <th style="width: 300px;">Selected Answer</th>
+                </tr>
+            </thead>
+            <tbody id="detailedScoreBody">
+                </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    // Ensure DMI_QUESTIONS, MAX_POSSIBLE_SCORE, etc. are loaded from dmi_assessment_data.js
+    let chartInstance = null;
+
+    /**
+     * Builds the HTML form structure based on the DMI_QUESTIONS array.
+     */
+    function buildForm() {
+        const form = document.getElementById('assessmentForm');
+        let html = '';
+
+        DMI_QUESTIONS.forEach(q => {
+            let optionsHtml = q.choices.map(c => 
+                `<option value="${c.value}">${c.text}</option>`
+            ).join('');
+
+            html += `
+                <div class="question-block" data-q-id="${q.id}">
+                    <h3>${q.id}. ${q.title}</h3>
+                    <p id="${q.id}_text">${q.text}</p>
+                    <select id="${q.id}_select" name="${q.id}" class="level-select" onchange="saveSelection(this)">
+                        <option value="">-- Select a Maturity Level (1-5) --</option>
+                        ${optionsHtml}
+                    </select>
+                </div>
+            `;
+        });
+        form.innerHTML += html;
+    }
+
+    /**
+     * Saves the current form selection to Local Storage.
+     */
+    function saveSelection(selectElement) {
+        let selections = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+        const questionId = selectElement.name;
+        const selectedValue = selectElement.value;
+
+        if (selectedValue) {
+            selections[questionId] = selectedValue;
+        } else {
+            delete selections[questionId];
+        }
+
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(selections));
+        
+        const saveStatus = document.getElementById('saveStatus');
+        saveStatus.style.display = 'block';
+        setTimeout(() => {
+            saveStatus.style.display = 'none';
+        }, 1500);
+    }
+
+    /**
+     * Loads saved selections from Local Storage.
+     */
+    function loadSelections() {
+        // Check if the secure data file loaded
+        if (typeof DMI_QUESTIONS === 'undefined') {
+            alert("Error: Missing 'dmi_assessment_data.js' file. Please ensure it is in the same folder.");
+            return;
+        }
+        buildForm();
+        
+        const savedData = localStorage.getItem(STORAGE_KEY);
+        if (savedData) {
+            const selections = JSON.parse(savedData);
+            
+            const questionElements = document.querySelectorAll('.level-select');
+            questionElements.forEach(selectElement => {
+                const questionId = selectElement.name;
+                if (selections[questionId]) {
+                    selectElement.value = selections[questionId];
+                }
+            });
+        }
+    }
+
+    /**
+     * Calculates the score and generates the report elements.
+     */
+    function finalizeAssessment() {
+        let totalScore = 0;
+        let answeredQuestions = 0;
+        const detailedScoreBody = document.getElementById('detailedScoreBody');
+        detailedScoreBody.innerHTML = ''; 
+        let currentArea = null;
+
+        DMI_QUESTIONS.forEach(qData => {
+            const block = document.querySelector(`[data-q-id="${qData.id}"]`);
+            const select = block ? block.querySelector('.level-select') : null;
+            const score = select ? parseInt(select.value) : NaN;
+
+            // Logic to insert the Area Title as a separator row
+            if (qData.area !== currentArea) {
+                currentArea = qData.area;
+                const areaRow = detailedScoreBody.insertRow();
+                areaRow.classList.add('area-row');
+                const areaCell = areaRow.insertCell();
+                areaCell.colSpan = 4; // Q-No, Question, Score, Selected Answer
+                areaCell.textContent = currentArea;
+                areaCell.classList.add('area-cell');
+            }
+
+            const row = detailedScoreBody.insertRow();
+            
+            row.insertCell().textContent = qData.id;
+            
+            const questionCell = row.insertCell();
+            questionCell.textContent = qData.text;
+            questionCell.classList.add('full-question');
+
+            if (!isNaN(score) && select.value !== "") {
+                totalScore += score;
+                answeredQuestions++;
+                
+                const scoreCell = row.insertCell();
+                scoreCell.textContent = score;
+                scoreCell.classList.add('score-value');
+
+                // Find the selected option text from the data file
+                const selectedChoice = qData.choices.find(c => c.value === score);
+                const answerText = selectedChoice ? selectedChoice.text : select.options[select.selectedIndex].text;
+
+                const answerCell = row.insertCell();
+                answerCell.textContent = answerText;
+            } else {
+                row.insertCell().textContent = 'N/A';
+                row.insertCell().textContent = 'Question Not Answered';
+            }
+        });
+
+        if (answeredQuestions !== TOTAL_QUESTIONS) {
+            alert(`Please answer all ${TOTAL_QUESTIONS} questions before generating the final report. You have answered ${answeredQuestions} questions.`);
+            return;
+        }
+
+        // Calculate Maturity Percentage
+        const maturityPercentage = (totalScore / MAX_POSSIBLE_SCORE) * 100;
+        const percentageText = maturityPercentage.toFixed(2) + "%";
+        
+        // Find Maturity Level Text
+        const level = maturityBands.find(band => maturityPercentage >= band.range[0] && maturityPercentage <= band.range[1]);
+        const levelName = level ? level.name : 'Unclassified';
+        const levelDescription = level ? level.description : 'Please review the score range definitions.';
+
+        // Display results
+        document.getElementById('maturityScoreDisplay').textContent = percentageText;
+        document.getElementById('totalScoreText').textContent = totalScore;
+        document.getElementById('maxScoreText').textContent = MAX_POSSIBLE_SCORE;
+
+        const levelTextElement = document.getElementById('maturityLevelText');
+        levelTextElement.innerHTML = `
+            <strong>${levelName}</strong>
+            <p>${levelDescription}</p>
+        `;
+        
+        document.getElementById('reportSection').style.display = 'block';
+        
+        // Scroll to the report
+        document.getElementById('reportSection').scrollIntoView({ behavior: 'smooth' });
+
+        // Generate the Horizontal Bar Chart
+        generateHorizontalBarChart(maturityPercentage.toFixed(2));
+    }
+    
+    /**
+     * Generates a Horizontal Bar Chart using Chart.js
+     * @param {number} maturityPercentage The calculated DMI percentage.
+     */
+    function generateHorizontalBarChart(maturityPercentage) {
+        if (chartInstance) {
+            chartInstance.destroy();
+        }
+        Chart.register(ChartDataLabels);
+
+        const data = {
+            labels: ['DMI Percentage'],
+            datasets: [{
+                label: 'Achieved Maturity',
+                data: [maturityPercentage],
+                backgroundColor: 'var(--secondary-green)',
+                borderColor: 'var(--secondary-green)',
+                borderWidth: 1,
+                barThickness: 50, // Set the thickness of the bar
+            }]
+        };
+
+        const config = {
+            type: 'bar',
+            data: data,
+            options: {
+                indexAxis: 'y', // Makes it a horizontal bar chart
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        min: 0,
+                        max: 100,
+                        title: {
+                            display: true,
+                            text: 'DMI Percentage'
+                        },
+                        grid: {
+                            display: true 
+                        }
+                    },
+                    y: {
+                        display: false // Hide the Y-axis label (since it's just one bar)
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + ': ' + context.parsed.x + '%';
+                            }
+                        }
+                    },
+                    datalabels: {
+                        anchor: 'end',
+                        align: 'end',
+                        formatter: (value, context) => {
+                            return value + '%';
+                        },
+                        color: 'var(--primary-blue)',
+                        font: {
+                            weight: 'bold',
+                            size: 14
+                        }
+                    }
+                }
+            }
+        };
+
+        const ctx = document.getElementById('maturityChart').getContext('2d');
+        chartInstance = new Chart(ctx, config);
+    }
+
+    // Run the load function when the page is finished loading
+    window.onload = loadSelections;
+</script>
+
+</body>
+</html>
