@@ -483,3 +483,455 @@ body {
         print-color-adjust: exact;
     }
 }
+/* /assets/css/styles.css */
+
+/* --- Custom Variables (Theme) --- */
+:root {
+    --primary-blue: #004d99; /* Tasheer Primary Blue */
+    --secondary-green: #388e3c; /* Accent Green */
+    --accent-gold: #ffc107; /* Gold/Yellow for highlight */
+    --background-light: #f4f7f6;
+    --card-background: #ffffff;
+    --text-dark: #333333;
+    --border-color: #e0e0e0;
+    --shadow-color: rgba(0, 0, 0, 0.05);
+}
+
+/* --- Base Styling --- */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--background-light);
+    color: var(--text-dark);
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* --- Header & Title --- */
+.header {
+    background-color: var(--card-background);
+    padding: 20px 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px var(--shadow-color);
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header h1 {
+    color: var(--primary-blue);
+    margin: 0;
+    font-size: 2.2em;
+}
+
+.logout-button {
+    background-color: #d32f2f;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.logout-button:hover {
+    background-color: #b71c1c;
+}
+
+/* --- Login Page Specific --- */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: var(--background-light);
+}
+
+.login-box {
+    background-color: var(--card-background);
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    width: 350px;
+    text-align: center;
+}
+
+.login-box img { /* Style for the new logo */
+    max-width: 180px; 
+    margin-bottom: 25px; 
+    height: auto;
+}
+
+.login-box h2 {
+    color: var(--primary-blue);
+    margin-bottom: 30px;
+}
+
+.login-box input[type="text"],
+.login-box input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.login-box button {
+    width: 100%;
+    padding: 12px;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: white;
+    background-color: var(--primary-blue);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.login-box button:hover {
+    background-color: #003366;
+}
+
+#errorMessage {
+    color: #d32f2f;
+    margin-top: 15px;
+    font-weight: bold;
+}
+
+/* --- Assessment Layout (index.html) --- */
+.assessment-layout {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.assessment-form-wrapper {
+    flex: 3;
+    min-width: 60%;
+}
+
+.live-score-sidebar {
+    flex: 1;
+    position: sticky;
+    top: 20px;
+}
+
+.live-score-card {
+    background-color: var(--card-background);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px var(--shadow-color);
+    text-align: center;
+}
+
+.live-score-card h4 {
+    color: var(--primary-blue);
+    margin-top: 0;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
+}
+
+.live-score-chart-container {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    margin: 20px auto;
+}
+
+.score-percentage-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2.5em;
+    font-weight: bold;
+    color: var(--text-dark);
+}
+
+.score-status {
+    font-size: 0.9em;
+    color: #666;
+}
+
+.area-header {
+    background-color: var(--secondary-green);
+    color: white;
+    padding: 10px 20px;
+    margin: 20px 0 10px 0;
+    border-radius: 5px;
+    font-size: 1.2em;
+}
+
+.question-block {
+    background-color: var(--card-background);
+    padding: 20px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    border-left: 5px solid var(--primary-blue);
+    box-shadow: 0 2px 4px var(--shadow-color);
+}
+
+.question-block h3 {
+    margin-top: 0;
+    color: var(--primary-blue);
+    font-size: 1.1em;
+}
+
+.question-block p {
+    font-size: 0.95em;
+    margin-bottom: 15px;
+    font-style: italic;
+    color: #666;
+}
+
+.level-select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+    background-color: var(--background-light);
+    font-size: 1em;
+    cursor: pointer;
+}
+
+.submit-button {
+    width: 100%;
+    padding: 15px;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: white;
+    background-color: var(--secondary-green);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+    margin-top: 20px;
+}
+
+.submit-button.gold {
+    background-color: var(--accent-gold);
+    color: var(--text-dark);
+}
+
+.submit-button.reset {
+    background-color: #ff5722;
+}
+
+.submit-button:hover {
+    background-color: #2e7d32;
+    box-shadow: 0 4px 8px var(--shadow-color);
+}
+
+.submit-button.gold:hover {
+    background-color: #ff9800;
+}
+
+.submit-button.reset:hover {
+    background-color: #e64a19;
+}
+
+/* --- Report Section --- */
+#reportSection {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 3px dashed var(--primary-blue);
+}
+
+.report-header {
+    background-color: var(--primary-blue);
+    color: white;
+    padding: 15px;
+    font-size: 1.5em;
+    text-align: center;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.report-grid {
+    display: flex;
+    gap: 30px;
+    background-color: var(--card-background);
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px var(--shadow-color);
+}
+
+.report-summary {
+    flex: 1;
+}
+
+.score-display {
+    font-size: 3em;
+    font-weight: bold;
+    color: var(--secondary-green);
+    margin-bottom: 10px;
+}
+
+/* Updated chart wrapper to handle two charts better */
+.chart-wrapper {
+    flex: 1 1 40%; /* Each chart takes up less space to fit two in a row */
+    max-width: 400px; 
+    height: 250px;
+}
+
+#maturityLevelText strong {
+    font-size: 1.5em;
+    color: var(--accent-gold);
+    display: block;
+    margin-bottom: 5px;
+}
+
+.score-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: var(--card-background);
+    box-shadow: 0 2px 8px var(--shadow-color);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.score-table th, .score-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.score-table th {
+    background-color: var(--primary-blue);
+    color: white;
+    text-transform: uppercase;
+    font-size: 0.85em;
+}
+
+.area-row .area-cell {
+    background-color: #e0f2f1;
+    color: var(--primary-blue);
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+/* --- Admin Dashboard Specific (admin.html) --- */
+.admin-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.admin-chart-area {
+    background-color: var(--card-background);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px var(--shadow-color);
+    height: 500px;
+    position: relative;
+}
+
+.admin-scores-area {
+    background-color: var(--card-background);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px var(--shadow-color);
+}
+
+.overall-score-card {
+    text-align: center;
+    background-color: #fffde7; /* Light Gold */
+    padding: 20px;
+    border-radius: 8px;
+    border: 2px solid var(--accent-gold);
+    margin-bottom: 20px;
+}
+
+.overall-score-card h3 {
+    margin: 0;
+    color: var(--primary-blue);
+}
+
+#overallDMIValue {
+    font-size: 2.5em;
+    font-weight: bold;
+    color: var(--secondary-green);
+}
+
+.admin-scores-area table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.admin-scores-area th, .admin-scores-area td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.admin-scores-area th {
+    background-color: #f0f0f0;
+}
+
+/* --- Print Styles (for index.html) --- */
+@media print {
+    /* Set the entire body to print mode */
+    body {
+        background-color: white;
+        margin: 0;
+        padding: 0;
+        visibility: hidden; /* Hide all content by default */
+    }
+
+    /* Only show the report section */
+    #reportSection {
+        display: block !important;
+        margin-top: 0;
+        padding-top: 0;
+        border-top: none;
+        width: 100%;
+        visibility: visible;
+    }
+    
+    /* Make all children of reportSection visible */
+    #reportSection, #reportSection * {
+        visibility: visible;
+    }
+
+    /* Hide UI elements even if they're inside the visible section */
+    .print-button, .header, .live-score-sidebar, .assessment-form-wrapper {
+        display: none !important;
+    }
+    
+    .report-grid {
+        /* Reset grid/flex layout for better print stacking */
+        display: block !important; 
+        box-shadow: none;
+        padding: 0;
+        margin-bottom: 20px;
+    }
+
+    /* Ensure chart wrappers display cleanly on their own lines for print */
+    .chart-wrapper {
+        display: block !important;
+        width: 100% !important; 
+        max-width: 400px !important; /* Cap width for better print view */
+        margin: 10px auto !important;
+        page-break-inside: avoid;
+    }
+
+
+    /* Print color adjustments */
+    .report-header, .area-row .area-cell {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+}
