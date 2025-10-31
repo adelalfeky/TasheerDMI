@@ -37,11 +37,7 @@
                 <div class="score-status" id="liveScoreStatus">0 / 14 Questions Answered</div>
             </div>
             
-            <button type="button" class="submit-button gold" onclick="openSharedFolder()" style="margin-bottom: 5px; margin-top: 20px;">
-                📂 **Upload Evidence Files (C:/folder1)**
-            </button>
-
-            <button type="button" class="submit-button reset" onclick="resetAssessment()" style="margin-top: 5px;">
+            <button type="button" class="submit-button reset" onclick="resetAssessment()" style="margin-top: 20px;">
                 🔄 Reset All Answers
             </button>
         </div>
@@ -75,6 +71,10 @@
             <div class="chart-wrapper">
                 <canvas id="finalMaturityChart"></canvas>
             </div>
+            
+            <div class="chart-wrapper">
+                <canvas id="finalDoughnutChart"></canvas> 
+            </div>
         </div>
 
         <button type="button" class="print-button" onclick="window.print()">
@@ -99,3 +99,4 @@
 
 </body>
 </html>
+

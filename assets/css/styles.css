@@ -425,3 +425,61 @@ body {
         print-color-adjust: exact;
     }
 }
+/* /assets/css/styles.css */
+
+/* ... (existing styles) ... */
+
+/* --- Login Page Specific --- */
+.login-box {
+    /* ... (existing styles) ... */
+    padding: 40px; /* Adjust padding if needed to fit logo better */
+}
+
+.login-box img { /* Added this style for the logo */
+    max-width: 180px; /* Adjust size as needed */
+    margin-bottom: 25px; /* Space between logo and fields */
+    height: auto;
+}
+
+/* ... (rest of the login-box styles) ... */
+
+/* --- Report Section --- */
+.report-grid {
+    /* Ensure charts have space */
+    grid-template-columns: 1fr 1fr; /* If you want 2 charts side by side */
+    gap: 20px;
+    display: flex; /* keep flex for general layout, but we'll manage charts */
+    flex-wrap: wrap; /* allow charts to wrap if space is limited */
+    justify-content: center; /* center items in flex */
+}
+
+.chart-wrapper {
+    flex: 1 1 45%; /* Allow charts to take up roughly half the space, but flex */
+    max-width: 400px; /* Control max width */
+    height: 250px;
+    margin: 10px auto; /* Add margin and auto for centering */
+}
+
+/* ... (rest of report section styles) ... */
+
+/* --- Print Styles (for index.html) --- */
+@media print {
+    /* ... (existing print styles) ... */
+
+    /* Make sure charts are visible and styled for print */
+    .chart-wrapper {
+        display: block !important;
+        page-break-inside: avoid; /* Prevent charts from breaking across pages */
+        margin: 15px auto; /* Center charts when printing */
+    }
+    
+    .report-grid {
+        display: block !important; /* Force block display for print to stack charts */
+    }
+
+    /* Print color adjustments for charts */
+    canvas {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+}
