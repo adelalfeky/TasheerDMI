@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tasheer DMI | Login</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/logic.js"></script>
+</head>
+<body onload="checkLoginGuard(false, 'login')">
+
+<div class="login-container">
+    <div class="login-box">
+        <h2>Tasheer DMI Login</h2>
+        <p>Use your department username/password.</p>
+        <form onsubmit="handleLogin(); return false;">
+            <input type="text" id="username" placeholder="Username (e.g., finance or admin)" required>
+            <input type="password" id="password" placeholder="Password (e.g., 123 or adminpassword)" required>
+            <button type="submit">Log In</button>
+            <p id="errorMessage"></p>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,4 +1,9 @@
 
+// ✅ Success — redirect to that user's page
+localStorage.setItem("isLoggedIn", "true"); // Save login status
+window.location.href = matchedUser.route;
+localStorage.setItem("loggedUser", matchedUser.username);
+
 
 // scripts/login_auth.js
 
@@ -21,6 +26,14 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
       password: "Dim@1213",
       route: "pages/004- Product/dmi_assessment_Product.html"
     }
+,
+    {
+      username: "p",
+      password: "123",
+      route: "pages/09_Procurement/tasheer_Procurment_DMI.html"
+    }
+
+    
   ];
   // ---------------------------------------------
 

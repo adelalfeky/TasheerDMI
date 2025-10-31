@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
+</script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Procurement DMI Assessment</title>
@@ -25,15 +28,40 @@
         ✅ Progress Saved Automatically!
     </div>
 
-    <form id="assessmentForm">
-        <h2>Please complete all 14 questions below:</h2>
-        </form>
+    <div class="assessment-layout">
+        
+        <div class="live-score-sidebar">
+            <div class="live-score-card">
+                <h4>Live DMI Score (Total Maturity)</h4>
+                
+                <div class="live-score-chart-container">
+                    <canvas id="liveMaturityChart"></canvas>
+                    <span class="score-percentage-center" id="liveScorePercentage">0%</span>
+                </div>
+                
+                <div class="score-status" id="liveScoreStatus">0 / 14 Questions Answered</div>
+            </div>
+        </div>
 
-    <button type="button" class="submit-button" onclick="finalizeAssessment()">
-        Finalize Assessment & Generate Detailed Report
-    </button>
-    
-    <div id="reportSection">
+        <div class="assessment-form-wrapper">
+            <form id="assessmentForm">
+                <h2>Please complete all 14 questions below:</h2>
+                </form>
+
+<a 
+  href="https://tasheer-my.sharepoint.com/:f:/p/afeky/EhEt-kVFKJxEhVFgQ0ncPE4B7cvLu5oMr3IUY0G2STr-bQ?e=JeHmYK" 
+  target="_blank" 
+  class="submit-button"
+  style="display: inline-block; margin-bottom: 15px; background-color: var(--accent-gold); color: #333; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 600; transition: background-color 0.3s;">
+  📂 Upload Evidence Files (Shared Folder)
+</a>
+
+
+            <button type="button" class="submit-button" onclick="finalizeAssessment()">
+                Finalize Assessment & Generate Detailed Report
+            </button>
+        </div>
+    </div> <div id="reportSection">
         <div class="report-header">
             Procurement DMI Final Assessment Report
         </div>
@@ -50,7 +78,7 @@
             </div>
             
             <div class="chart-wrapper">
-                <canvas id="maturityChart"></canvas>
+                <canvas id="finalMaturityChart"></canvas>
             </div>
         </div>
 
@@ -75,8 +103,136 @@
 </div>
 
 <script>
-    // Ensure DMI_QUESTIONS, MAX_POSSIBLE_SCORE, etc. are loaded from dmi_assessment_data.js
-    let chartInstance = null;
+    let liveChartInstance = null;
+    let finalChartInstance = null;
+    
+    // Define the colors for the chart based on the score
+    const CHART_COLORS = {
+        score_red: 'rgba(211, 47, 47, 1)',      // Red (0-20%)
+        score_orange: 'rgba(255, 165, 0, 1)',   // Orange (21-59%)
+        score_blue: 'rgba(0, 77, 156, 1)',      // Blue (60-64%)
+        score_green: 'rgba(56, 142, 60, 1)',    // Green (65%+)
+        remaining: 'rgba(224, 224, 224, 0.5)'  // Light gray for remaining portion
+    };
+
+    /**
+     * Determines the primary color of the score slice based on the percentage.
+     * @param {number} percentage The calculated DMI percentage.
+     * @returns {string} The CSS color string.
+     */
+    function getColorByScore(percentage) {
+        if (percentage >= 65) {
+            return CHART_COLORS.score_green;
+        } else if (percentage >= 60) {
+            return CHART_COLORS.score_blue;
+        } else if (percentage >= 21) {
+            return CHART_COLORS.score_orange;
+        } else if (percentage >= 0) {
+            return CHART_COLORS.score_red;
+        }
+        return CHART_COLORS.remaining; 
+    }
+
+    /**
+     * Calculates and updates the floating live score card.
+     * Uses MAX_POSSIBLE_SCORE (70) as the denominator for the percentage.
+     * @returns {object} {totalScore, answeredQuestions}
+     */
+    function updateLiveScore() {
+        let currentTotalScore = 0;
+        let currentAnsweredQuestions = 0;
+        const selections = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+        
+        DMI_QUESTIONS.forEach(qData => {
+            const score = parseInt(selections[qData.id]);
+            if (!isNaN(score)) {
+                currentTotalScore += score;
+                currentAnsweredQuestions++;
+            }
+        });
+        
+        
+        // NEW LOGIC: Percentage is based on the Max Possible Score for the WHOLE ASSESSMENT (70).
+        let livePercentage = (currentTotalScore / MAX_POSSIBLE_SCORE) * 100;
+        
+        // Update the live score display elements
+        document.getElementById('liveScorePercentage').textContent = livePercentage.toFixed(0) + "%"; 
+        document.getElementById('liveScoreStatus').textContent = `${currentAnsweredQuestions} / ${TOTAL_QUESTIONS} Questions Answered`;
+        
+        // Generate the Doughnut Chart
+        generateLiveDoughnutChart(livePercentage);
+        
+        return { totalScore: currentTotalScore, answeredQuestions: currentAnsweredQuestions };
+    }
+
+    /**
+     * Generates a Doughnut Chart for the live score with dynamic colors.
+     * @param {number} maturityPercentage The calculated DMI percentage of the whole project.
+     */
+    function generateLiveDoughnutChart(maturityPercentage) {
+        if (liveChartInstance) {
+            liveChartInstance.destroy();
+        }
+
+        const scoreColor = getColorByScore(maturityPercentage);
+        const data = {
+            labels: ['Achieved Score', 'Max Remaining Score'],
+            datasets: [{
+                data: [maturityPercentage, 100 - maturityPercentage],
+                backgroundColor: [scoreColor, CHART_COLORS.remaining],
+                borderColor: [scoreColor, CHART_COLORS.remaining],
+                borderWidth: 0,
+            }]
+        };
+
+        const config = {
+            type: 'doughnut',
+            data: data,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '80%', // Makes it a doughnut
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        enabled: false // Tooltips are disabled since the percentage is in the center
+                    }
+                }
+            }
+        };
+
+        const ctx = document.getElementById('liveMaturityChart').getContext('2d');
+        liveChartInstance = new Chart(ctx, config);
+    }
+
+    /**
+     * Saves the current form selection to Local Storage AND updates the live score.
+     */
+    function saveSelection(selectElement) {
+        let selections = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+        const questionId = selectElement.name;
+        const selectedValue = selectElement.value;
+
+        if (selectedValue) {
+            selections[questionId] = selectedValue;
+        } else {
+            delete selections[questionId];
+        }
+
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(selections));
+        
+        // --- Live Score Update ---
+        updateLiveScore();
+        // -------------------------
+
+        const saveStatus = document.getElementById('saveStatus');
+        saveStatus.style.display = 'block';
+        setTimeout(() => {
+            saveStatus.style.display = 'none';
+        }, 1500);
+    }
 
     /**
      * Builds the HTML form structure based on the DMI_QUESTIONS array.
@@ -105,34 +261,11 @@
     }
 
     /**
-     * Saves the current form selection to Local Storage.
-     */
-    function saveSelection(selectElement) {
-        let selections = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
-        const questionId = selectElement.name;
-        const selectedValue = selectElement.value;
-
-        if (selectedValue) {
-            selections[questionId] = selectedValue;
-        } else {
-            delete selections[questionId];
-        }
-
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(selections));
-        
-        const saveStatus = document.getElementById('saveStatus');
-        saveStatus.style.display = 'block';
-        setTimeout(() => {
-            saveStatus.style.display = 'none';
-        }, 1500);
-    }
-
-    /**
      * Loads saved selections from Local Storage.
      */
     function loadSelections() {
         // Check if the secure data file loaded
-        if (typeof DMI_QUESTIONS === 'undefined') {
+        if (typeof DMI_QUESTIONS === 'undefined' || typeof MAX_POSSIBLE_SCORE === 'undefined') {
             alert("Error: Missing 'dmi_assessment_data.js' file. Please ensure it is in the same folder.");
             return;
         }
@@ -150,22 +283,32 @@
                 }
             });
         }
+        
+        // Initial load of the live score
+        updateLiveScore();
     }
 
     /**
      * Calculates the score and generates the report elements.
      */
     function finalizeAssessment() {
-        let totalScore = 0;
-        let answeredQuestions = 0;
+        // Use the live score function to get current data (already calculated against MAX_POSSIBLE_SCORE)
+        const { totalScore, answeredQuestions } = updateLiveScore();
+
+        if (answeredQuestions !== TOTAL_QUESTIONS) {
+            alert(`Please answer all ${TOTAL_QUESTIONS} questions before generating the final report. You have answered ${answeredQuestions} questions.`);
+            return;
+        }
+
         const detailedScoreBody = document.getElementById('detailedScoreBody');
         detailedScoreBody.innerHTML = ''; 
         let currentArea = null;
 
+        // Re-run table generation to ensure clean data for the report
+        const selections = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+
         DMI_QUESTIONS.forEach(qData => {
-            const block = document.querySelector(`[data-q-id="${qData.id}"]`);
-            const select = block ? block.querySelector('.level-select') : null;
-            const score = select ? parseInt(select.value) : NaN;
+            const score = parseInt(selections[qData.id]);
 
             // Logic to insert the Area Title as a separator row
             if (qData.area !== currentArea) {
@@ -186,9 +329,7 @@
             questionCell.textContent = qData.text;
             questionCell.classList.add('full-question');
 
-            if (!isNaN(score) && select.value !== "") {
-                totalScore += score;
-                answeredQuestions++;
+            if (!isNaN(score)) {
                 
                 const scoreCell = row.insertCell();
                 scoreCell.textContent = score;
@@ -196,22 +337,19 @@
 
                 // Find the selected option text from the data file
                 const selectedChoice = qData.choices.find(c => c.value === score);
-                const answerText = selectedChoice ? selectedChoice.text : select.options[select.selectedIndex].text;
+                const answerText = selectedChoice ? selectedChoice.text : 'Error: Answer text missing.';
 
                 const answerCell = row.insertCell();
                 answerCell.textContent = answerText;
             } else {
+                 // Should not happen if the answeredQuestions check passes, but good for safety
                 row.insertCell().textContent = 'N/A';
                 row.insertCell().textContent = 'Question Not Answered';
             }
         });
 
-        if (answeredQuestions !== TOTAL_QUESTIONS) {
-            alert(`Please answer all ${TOTAL_QUESTIONS} questions before generating the final report. You have answered ${answeredQuestions} questions.`);
-            return;
-        }
 
-        // Calculate Maturity Percentage
+        // Calculate Final Maturity Percentage (based on MAX POSSIBLE SCORE)
         const maturityPercentage = (totalScore / MAX_POSSIBLE_SCORE) * 100;
         const percentageText = maturityPercentage.toFixed(2) + "%";
         
@@ -236,18 +374,19 @@
         // Scroll to the report
         document.getElementById('reportSection').scrollIntoView({ behavior: 'smooth' });
 
-        // Generate the Horizontal Bar Chart
-        generateHorizontalBarChart(maturityPercentage.toFixed(2));
+        // Generate the Horizontal Bar Chart for the Final Report
+        generateFinalBarChart(maturityPercentage.toFixed(2));
     }
     
     /**
-     * Generates a Horizontal Bar Chart using Chart.js
+     * Generates a Horizontal Bar Chart for the final report.
      * @param {number} maturityPercentage The calculated DMI percentage.
      */
-    function generateHorizontalBarChart(maturityPercentage) {
-        if (chartInstance) {
-            chartInstance.destroy();
+    function generateFinalBarChart(maturityPercentage) {
+        if (finalChartInstance) {
+            finalChartInstance.destroy();
         }
+        // Register DataLabels plugin here, as it's only needed for this chart
         Chart.register(ChartDataLabels);
 
         const data = {
@@ -258,7 +397,7 @@
                 backgroundColor: 'var(--secondary-green)',
                 borderColor: 'var(--secondary-green)',
                 borderWidth: 1,
-                barThickness: 50, // Set the thickness of the bar
+                barThickness: 50, 
             }]
         };
 
@@ -266,7 +405,7 @@
             type: 'bar',
             data: data,
             options: {
-                indexAxis: 'y', // Makes it a horizontal bar chart
+                indexAxis: 'y', 
                 responsive: true,
                 maintainAspectRatio: false,
                 scales: {
@@ -282,7 +421,7 @@
                         }
                     },
                     y: {
-                        display: false // Hide the Y-axis label (since it's just one bar)
+                        display: false 
                     }
                 },
                 plugins: {
@@ -312,8 +451,8 @@
             }
         };
 
-        const ctx = document.getElementById('maturityChart').getContext('2d');
-        chartInstance = new Chart(ctx, config);
+        const ctx = document.getElementById('finalMaturityChart').getContext('2d');
+        finalChartInstance = new Chart(ctx, config);
     }
 
     // Run the load function when the page is finished loading

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Tasheer DMI</title>
+    
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/logic.js"></script>
+</head>
+<body onload="loadAdminDashboard()">
+
+<div class="container">
+    <div class="header">
+        <h1 id="welcomeMessage">Tasheer DMI Admin Dashboard</h1>
+        <button class="logout-button" onclick="logout()">Logout</button>
+    </div>
+
+    <div class="admin-grid">
+        <div class="admin-chart-area">
+            <canvas id="adminDMIChart"></canvas>
+        </div>
+
+        <div class="admin-scores-area">
+            <div class="overall-score-card">
+                <h3>Overall Company DMI (Average of Completed)</h3>
+                <div id="overallDMIValue">0.00%</div>
+                <div style="font-size: 0.9em; color: #666;">Based on completed 14-question assessments.</div>
+            </div>
+
+            <h3>Department Scores (Highest to Lowest)</h3>
+            <table class="score-table">
+                <thead>
+                    <tr>
+                        <th>Department</th>
+                        <th style="width: 100px;">Score (%)</th>
+                        <th style="width: 120px;">Progress</th>
+                    </tr>
+                </thead>
+                <tbody id="departmentTableBody">
+                    </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
